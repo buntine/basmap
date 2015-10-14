@@ -1,7 +1,10 @@
 extern crate getopts;
+extern crate basmap;
 
 use getopts::Options;
 use std::env;
+
+use basmap::*;
 
 fn print_usage(program: &str, opts: Options) {
     let brief = format!("Usage: {} URL [options]", program);
@@ -46,6 +49,13 @@ fn main() {
         Some(m) => { m.parse::<i32>().unwrap() }
         None => { 1000 }
     };
+    let basmap = Basmap{
+        url: url,
+        concurrent: concurrent,
+        sleep: sleep,
+        verbose: verbose,
+        redirects: redirects,
+    };
 
-    println!("URL: {}\nVERBOSE: {}\nREDIRECTS: {}\nCONCURRENT: {}\nSLEEP: {}\n", url, verbose, redirects, concurrent, sleep);
+    basmap.run();
 }
