@@ -36,6 +36,8 @@ fn main() {
     }
 
     let url = matches.free[0].clone();
+    let verbose = matches.opt_str("v").is_some();
+    let redirects = matches.opt_str("r").is_some();
     let concurrent: i32 = match matches.opt_str("c") {
         Some(c) => { 4 }
         None => { 3 }
