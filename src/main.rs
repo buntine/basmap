@@ -39,11 +39,11 @@ fn main() {
     let verbose = matches.opt_str("v").is_some();
     let redirects = matches.opt_str("r").is_some();
     let concurrent: i32 = match matches.opt_str("c") {
-        Some(c) => { 4 }
+        Some(c) => { c.parse::<i32>().unwrap() }
         None => { 3 }
     };
     let sleep: i32 = match matches.opt_str("s") {
-        Some(c) => { 2000 }
+        Some(m) => { m.parse::<i32>().unwrap() }
         None => { 1000 }
     };
 
