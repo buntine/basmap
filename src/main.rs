@@ -36,8 +36,8 @@ fn main() {
     }
 
     let url = matches.free[0].clone();
-    let verbose = matches.opt_str("v").is_some();
-    let redirects = matches.opt_str("r").is_some();
+    let verbose = matches.opt_present("v");
+    let redirects = matches.opt_present("r");
     let concurrent: i32 = match matches.opt_str("c") {
         Some(c) => { c.parse::<i32>().unwrap() }
         None => { 3 }
@@ -47,4 +47,5 @@ fn main() {
         None => { 1000 }
     };
 
+    println!("URL: {}\nVERBOSE: {}\nREDIRECTS: {}\nCONCURRENT: {}\nSLEEP: {}\n", url, verbose, redirects, concurrent, sleep);
 }
