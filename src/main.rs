@@ -30,8 +30,19 @@ fn main() {
         Err(e) => { panic!(e.to_string()) }
     };
 
-    if (matches.opt_present("h")) {
+    if matches.opt_present("h") || matches.free.is_empty() {
         print_usage(&program, options);
         return;
     }
+
+    let url = matches.free[0].clone();
+    let concurrent: i32 = match matches.opt_str("c") {
+        Some(c) => { 4 }
+        None => { 3 }
+    };
+    let sleep: i32 = match matches.opt_str("s") {
+        Some(c) => { 2000 }
+        None => { 1000 }
+    };
+
 }
