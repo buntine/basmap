@@ -1,4 +1,3 @@
-#[derive(Default)]
 pub struct Basmap {
     pub url: String,
     pub concurrent: i32,
