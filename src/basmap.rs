@@ -1,3 +1,7 @@
+extern crate hyper;
+
+use hyper::Client;
+
 pub struct Basmap {
     pub url: String,
     pub concurrent: i32,
@@ -18,8 +22,8 @@ impl Basmap {
             urls: vec![]}
     }
 
-    pub fn parse(&self) -> Result<i32, &str> {
-        Ok(32)
+    pub fn parse(&self) -> Result<usize, &str> {
+        Ok(self.urls.len())
     }
 
     pub fn run(&self) {

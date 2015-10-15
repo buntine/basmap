@@ -9,3 +9,4 @@ path = "src/basmap.rs"
 
 [dependencies]
 getopts = "0.2"
+hyper = "0.6"
