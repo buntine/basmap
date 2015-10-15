@@ -54,9 +54,10 @@ fn main() {
                              sleep,
                              verbose,
                              redirects);
-
     match basmap.parse() {
         Ok(n) => { println!("Fetched {} URLs from {}\n", n, basmap.url) }
         Err(e) => { panic!(e.to_string()) }
     }
+
+    basmap.run();
 }

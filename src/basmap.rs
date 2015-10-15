@@ -43,16 +43,31 @@ impl Basmap {
         }
     }
 
+    fn parse_sitemap(&self, sitemap: &String) -> Result<usize, &str> {
+        // Parse out all <loc> values from sitemap.
+        // Return Ok(self.urls.len())
+
+        Ok(self.urls.len())
+    }
+
     pub fn parse(&self) -> Result<usize, &str> {
         let sitemap = match self.fetch_sitemap() {
             Ok(s) => s,
             Err(s) => { return Err(s) }
         };
 
-        Ok(self.urls.len())
+        self.parse_sitemap(&sitemap)
     }
 
     pub fn run(&self) {
-        println!("URL: {}\nVERBOSE: {}\nREDIRECTS: {}\nCONCURRENT: {}\nSLEEP: {}\n", self.url, self.verbose, self.redirects, self.concurrent, self.sleep);
+        // Make iterator from self.urls of groups of self.concurrent
+        // For each group, spawn N threads. Each returns bool of success.
+        // Wait for each. Join back and record success.
+        // Repeat until exhausted.
+        // Report on total success vs fail.
+
+        if self.urls.is_empty() {
+            println!("No URLs to check!");
+        }
     }
 }
