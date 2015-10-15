@@ -49,13 +49,14 @@ fn main() {
         Some(m) => { m.parse::<i32>().unwrap() }
         None => { 1000 }
     };
-    let basmap = Basmap{
-        url: url,
-        concurrent: concurrent,
-        sleep: sleep,
-        verbose: verbose,
-        redirects: redirects,
-    };
+    let basmap = Basmap::new(url,
+                             concurrent,
+                             sleep,
+                             verbose,
+                             redirects);
 
-    basmap.run();
+    match basmap.parse() {
+        Ok(n) => { println!("Fetched {} URLs from {}\n", n, basmap.url) }
+        Err(e) => { panic!(e.to_string()) }
+    }
 }
