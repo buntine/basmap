@@ -1,9 +1,11 @@
 extern crate hyper;
-
-use std::io::Read;
+extern crate xml;
 
 use hyper::Client;
+use hyper::client::response::Response;
 use hyper::header::Connection;
+
+use xml::reader::{EventReader, XmlEvent};
 
 pub struct Basmap {
     pub url: String,
@@ -25,27 +27,32 @@ impl Basmap {
             urls: vec![]}
     }
 
-    fn fetch_sitemap(&self) -> Result<String, &str> {
+    fn fetch_sitemap(&self) -> Result<Response, &str> {
         let client = Client::new();
         let resp = client.get(&self.url[..])
             .header(Connection::close())
             .send();
         
-        if let Ok(mut r) = resp {
-            let mut body = "".to_string();
-
-            match r.read_to_string(&mut body) {
-                Ok(_) => Ok(body),
-                _ => Err("Could not read HTTP response")
-            }
-        } else {
-            Err("Invalid sitemap URL")
+        match resp {
+            Ok(r) => Ok(r),
+            _ => Err("Invalid sitemap URL")
         }
     }
 
-    fn parse_sitemap(&self, sitemap: &String) -> Result<usize, &str> {
+    fn parse_sitemap(&self, sitemap: Response) -> Result<usize, &str> {
         // Parse out all <loc> values from sitemap.
         // Return Ok(self.urls.len())
+
+        let parser = EventReader::new(sitemap);
+
+        for e in parser {
+            match e {
+                Ok(XmlEvent::StartElement{name, ..}) => {
+                    println!("{}", name);
+                }
+                _ => {}
+            }
+        }
 
         Ok(self.urls.len())
     }
@@ -56,7 +63,7 @@ impl Basmap {
             Err(s) => { return Err(s) }
         };
 
-        self.parse_sitemap(&sitemap)
+        self.parse_sitemap(sitemap)
     }
 
     pub fn run(&self) {
