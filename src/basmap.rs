@@ -4,12 +4,26 @@ use xml::reader::{EventReader, XmlEvent};
 
 use std::io::Read;
 
+pub struct SitemapUrl {
+    url: String,
+    success: bool,
+}
+
+impl SitemapUrl {
+    pub fn new(url: String) -> SitemapUrl {
+        SitemapUrl{
+            url: url,
+            success: false
+        }
+    }
+}
+
 pub struct Basmap {
     pub concurrent: i32,
     pub sleep: i32,
     pub redirects: bool,
     pub verbose: bool,
-    urls: Vec<String>,
+    urls: Vec<SitemapUrl>,
 }
 
 impl Basmap {
@@ -36,7 +50,7 @@ impl Basmap {
                 }
                 Ok(XmlEvent::Characters(b)) => {
                     if in_loc {
-                        self.urls.push(b);
+                        self.urls.push(SitemapUrl::new(b));
                     }
                 }
                 _ => { in_loc = false; }
@@ -56,7 +70,14 @@ impl Basmap {
         if self.urls.is_empty() {
             println!("No URLs to check!");
         } else {
-            println!("Parsing URLS...");
+            let urls = &self.urls[..];
+
+            for chunk in urls.chunks(self.concurrent as usize) {
+                for url in chunk {
+                    println!("Spawning thread");
+                }
+                println!("---");
+            }
         }
     }
 }
