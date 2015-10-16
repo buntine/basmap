@@ -39,18 +39,23 @@ impl Basmap {
         }
     }
 
-    fn parse_sitemap(&self, sitemap: Response) -> Result<usize, &str> {
-        // Parse out all <loc> values from sitemap.
-        // Return Ok(self.urls.len())
-
+    fn parse_sitemap(&mut self, sitemap: Response) -> Result<usize, &str> {
         let parser = EventReader::new(sitemap);
+        let mut in_loc = false;
 
         for e in parser {
             match e {
                 Ok(XmlEvent::StartElement{name, ..}) => {
-                    println!("{}", name);
+                    if &name.local_name[..] == "loc" && name.prefix.is_none() {
+                        in_loc = true;
+                    }
                 }
-                _ => {}
+                Ok(XmlEvent::Characters(b)) => {
+                    if in_loc {
+                        self.urls.push(b);
+                    }
+                }
+                _ => { in_loc = false; }
             }
         }
 
