@@ -1,8 +1,12 @@
+extern crate hyper;
 extern crate getopts;
 extern crate basmap;
 
 use getopts::Options;
 use std::env;
+
+use hyper::Client;
+use hyper::header::Connection;
 
 use basmap::*;
 
@@ -49,13 +53,21 @@ fn main() {
         Some(m) => { m.parse::<i32>().unwrap() }
         None => { 1000 }
     };
-    let basmap = Basmap::new(url,
-                             concurrent,
-                             sleep,
-                             verbose,
-                             redirects);
-    match basmap.parse() {
-        Ok(n) => { println!("Fetched {} URLs from {}\n", n, basmap.url) }
+
+    let client = Client::new();
+    let resp = client.get(&url[..])
+        .header(Connection::close())
+        .send()
+        .ok()
+        .expect("Invalid sitemap URL");
+        
+    let mut basmap = Basmap::new(concurrent,
+                                 sleep,
+                                 verbose,
+                                 redirects);
+
+    match basmap.parse(resp) {
+        Ok(n) => { println!("Fetched {} URLs from {}\n", n, url) }
         Err(e) => { panic!(e.to_string()) }
     }
 

@@ -1,14 +1,10 @@
-extern crate hyper;
 extern crate xml;
-
-use hyper::Client;
-use hyper::client::response::Response;
-use hyper::header::Connection;
 
 use xml::reader::{EventReader, XmlEvent};
 
+use std::io::Read;
+
 pub struct Basmap {
-    pub url: String,
     pub concurrent: i32,
     pub sleep: i32,
     pub redirects: bool,
@@ -17,30 +13,18 @@ pub struct Basmap {
 }
 
 impl Basmap {
-    pub fn new(url: String, concurrent: i32, sleep: i32, verbose: bool, redirects: bool) -> Basmap {
+    pub fn new(concurrent: i32, sleep: i32, verbose: bool, redirects: bool) -> Basmap {
         Basmap{
-            url: url,
             concurrent: concurrent,
             sleep: sleep,
             verbose: verbose,
             redirects: redirects,
-            urls: vec![]}
-    }
-
-    fn fetch_sitemap(&self) -> Result<Response, &str> {
-        let client = Client::new();
-        let resp = client.get(&self.url[..])
-            .header(Connection::close())
-            .send();
-        
-        match resp {
-            Ok(r) => Ok(r),
-            _ => Err("Invalid sitemap URL")
+            urls: vec![]
         }
     }
 
-    fn parse_sitemap(&mut self, sitemap: Response) -> Result<usize, &str> {
-        let parser = EventReader::new(sitemap);
+    pub fn parse<T: Read>(&mut self, reader: T) -> Result<usize, &str> {
+        let parser = EventReader::new(reader);
         let mut in_loc = false;
 
         for e in parser {
@@ -62,15 +46,6 @@ impl Basmap {
         Ok(self.urls.len())
     }
 
-    pub fn parse(&self) -> Result<usize, &str> {
-        let sitemap = match self.fetch_sitemap() {
-            Ok(s) => s,
-            Err(s) => { return Err(s) }
-        };
-
-        self.parse_sitemap(sitemap)
-    }
-
     pub fn run(&self) {
         // Make iterator from self.urls of groups of self.concurrent
         // For each group, spawn N threads. Each returns bool of success.
@@ -80,6 +55,8 @@ impl Basmap {
 
         if self.urls.is_empty() {
             println!("No URLs to check!");
+        } else {
+            println!("Parsing URLS...");
         }
     }
 }
