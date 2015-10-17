@@ -66,11 +66,12 @@ impl Basmap {
         if self.urls.is_empty() {
             println!("No URLs to check!");
         } else {
-            let urls = &mut self.urls[..];
+            let urls = &self.urls[..];
 
             for chunk in urls.chunks(self.concurrent as usize) {
                 let mut threads: Vec<std::thread::JoinHandle<Result<i32, i32>>> = vec![];
 
+                // Replace with map?
                 for url in chunk {
                     threads.push(thread::spawn(move || { 
                         println!("Spawning thread");
@@ -78,8 +79,11 @@ impl Basmap {
                     }));
                 }
 
-                for t in threads {
-                    let result = t.join().unwrap();
+                let mut it = chunk.iter().zip(&threads);
+
+                while let Some((ref mut url, ref thread)) = it.next() {
+                    let result = thread.join().unwrap();
+                    url.code = result;
                 }
 
                 println!("---");
