@@ -87,4 +87,11 @@ impl Basmap {
             }
         }
     }
+
+    pub fn summarize(&self) {
+        let (success, fail): (Vec<_>, Vec<_>) = self.urls.iter().partition(|&u| u.code.is_ok());
+
+        println!("TOTAL SUCCESS: {}", success.len());
+        println!("TOTAL FAIL: {}", fail.len());
+    }
 }

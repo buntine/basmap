@@ -72,4 +72,5 @@ fn main() {
     }
 
     basmap.run();
+    basmap.summarize();
 }
