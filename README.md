@@ -14,7 +14,7 @@ Options:
     -c NUMBER           Amount of concurrent HTTP requests (default 3)
     -s NUMBER           Milliseconds to sleep between requests (default 1000)
     -h, --help          Print this help menu
-    -r, --redirects     Consider HTTP redirects (30x) successfuly
+    -r, --redirects     Consider HTTP redirects (30x) successful
     -v, --verbose       Print progress verbosely
 ```
 

@@ -4,16 +4,18 @@ use xml::reader::{EventReader, XmlEvent};
 
 use std::io::Read;
 
+use std::thread;
+
 pub struct SitemapUrl {
     url: String,
-    success: bool,
+    code: Result<i32, i32>,
 }
 
 impl SitemapUrl {
     pub fn new(url: String) -> SitemapUrl {
         SitemapUrl{
             url: url,
-            success: false
+            code: Ok(200),
         }
     }
 }
@@ -60,22 +62,26 @@ impl Basmap {
         Ok(self.urls.len())
     }
 
-    pub fn run(&self) {
-        // Make iterator from self.urls of groups of self.concurrent
-        // For each group, spawn N threads. Each returns bool of success.
-        // Wait for each. Join back and record success.
-        // Repeat until exhausted.
-        // Report on total success vs fail.
-
+    pub fn run(&mut self) {
         if self.urls.is_empty() {
             println!("No URLs to check!");
         } else {
-            let urls = &self.urls[..];
+            let urls = &mut self.urls[..];
 
             for chunk in urls.chunks(self.concurrent as usize) {
+                let mut threads: Vec<std::thread::JoinHandle<Result<i32, i32>>> = vec![];
+
                 for url in chunk {
-                    println!("Spawning thread");
+                    threads.push(thread::spawn(move || { 
+                        println!("Spawning thread");
+                        Ok(204)
+                    }));
                 }
+
+                for t in threads {
+                    let result = t.join().unwrap();
+                }
+
                 println!("---");
             }
         }
