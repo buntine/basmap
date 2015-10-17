@@ -83,12 +83,12 @@ impl Basmap {
                     println!("{} is {}", chunk[0].url, result.unwrap());
                 }
 
-           //     let mut it = chunk.iter_mut().zip(threads);
-          //      while let Some((url, thread)) = it.next() {
-          //          let result = thread.join().unwrap();
-          //          println!("{} is {}", url.url, result.unwrap());
-          //         url.code = Ok(204);
-          //      }
+                let mut it = chunk.iter_mut().zip(&threads);
+                while let Some((url, thread)) = it.next() {
+                    let result = thread.join().unwrap();
+                    println!("{} is {}", url.url, result.unwrap());
+                   url.code = Ok(204);
+                }
 
                 println!("---");
             }
