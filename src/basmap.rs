@@ -4,6 +4,8 @@ extern crate hyper;
 use xml::reader::{EventReader, XmlEvent};
 
 use std::io::Read;
+use std::io::Write;
+use std::io::stdout;
 
 use std::sync::Arc;
 use std::thread;
@@ -105,7 +107,7 @@ impl Basmap {
                         true => println!("{} is {}", url.url, result.unwrap()),
                         false => {
                             print!("{}", if result.is_ok() {"."} else {"x"});
-                            io::stdout().flush();
+                            stdout().flush().ok();
                         }
                     }
                 }
@@ -114,7 +116,7 @@ impl Basmap {
                     true => println!("--- Sleeping for {} milliseconds ---", self.sleep),
                     false => { 
                         print!(", ");
-                        io::stdout().flush();
+                        stdout().flush().ok();
                     }
                 }
 
