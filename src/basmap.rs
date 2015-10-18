@@ -128,8 +128,9 @@ impl Basmap {
         // For quiet, just print total number in each StatusCode.
         // Give percentages of total on each.
 
-        println!("\n\n");
-        println!("TOTAL SUCCESS: {}", success.len());
-        println!("TOTAL FAIL: {}", fail.len());
+        println!("\n");
+
+        println!("{}", Green.paint(&format!("Successful: {}", success.len())[..]));
+        println!("{}", Red.paint(&format!("Failed: {}", fail.len())[..]));
     }
 }
