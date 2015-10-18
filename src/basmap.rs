@@ -1,5 +1,6 @@
 extern crate xml;
 extern crate hyper;
+extern crate ansi_term;
 
 use xml::reader::{EventReader, XmlEvent};
 
@@ -13,6 +14,8 @@ use std::thread;
 use hyper::Client;
 use hyper::header::Connection;
 use hyper::status::StatusCode;
+
+use ansi_term::Colour::{Red, Green};
 
 pub struct SitemapUrl {
     url: String,
@@ -76,6 +79,7 @@ impl Basmap {
         } else {
             let client = Arc::new(Client::new());
             let mut urls = &mut self.urls[..];
+            let redirects = self.redirects;
 
             for chunk in urls.chunks_mut(self.concurrent) {
                 let threads: Vec<std::thread::JoinHandle<Result<StatusCode, StatusCode>>> = chunk.iter().map(|url| {
@@ -90,7 +94,12 @@ impl Basmap {
                         match resp {
                             Ok(r) => {
                                 let status = r.status;
-                                if status.is_success() { Ok(status) } else { Err(status) }
+
+                                if status.is_success() || (redirects && status.is_redirection()) {
+                                    Ok(status)
+                                } else {
+                                    Err(status)
+                                }
                             }
                             _ => Err(StatusCode::Unregistered(0)),
                         }
@@ -103,22 +112,12 @@ impl Basmap {
                     let result = thread.join().unwrap();
                     url.code = result;
 
-                    match self.verbose {
-                        true => println!("{} is {}", url.url, result.unwrap()),
-                        false => {
-                            print!("{}", if result.is_ok() {"."} else {"x"});
-                            stdout().flush().ok();
-                        }
-                    }
+                    print!("{}", if result.is_ok() {Green.paint(".")} else {Red.paint("x")});
+                    stdout().flush().ok();
                 }
 
-                match self.verbose {
-                    true => println!("--- Sleeping for {} milliseconds ---", self.sleep),
-                    false => { 
-                        print!(", ");
-                        stdout().flush().ok();
-                    }
-                }
+                print!(", ");
+                stdout().flush().ok();
 
                 thread::sleep_ms(self.sleep);
             }
@@ -128,6 +127,11 @@ impl Basmap {
     pub fn summarize(&self) {
         // Try fold using a tuple.
         let (success, fail): (Vec<_>, Vec<_>) = self.urls.iter().partition(|&u| u.code.is_ok());
+
+        // Build iterators over each unique StatusCode.
+        // For verbose, print full URLs for each StatusCode.
+        // For quiet, just print total number in each StatusCode.
+        // Give percentages of total on each.
 
         println!("TOTAL SUCCESS: {}", success.len());
         println!("TOTAL FAIL: {}", fail.len());
