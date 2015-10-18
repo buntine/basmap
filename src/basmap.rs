@@ -88,12 +88,7 @@ impl Basmap {
                         match resp {
                             Ok(r) => {
                                 let status = r.status;
-
-                                if status.is_success() {
-                                    Ok(status)
-                                } else {
-                                    Err(status)
-                                }
+                                if status.is_success() { Ok(status) } else { Err(status) }
                             }
                             _ => Err(StatusCode::Unregistered(0)),
                         }
@@ -106,10 +101,23 @@ impl Basmap {
                     let result = thread.join().unwrap();
                     url.code = result;
 
-                    println!("{} is {}", url.url, url.code.unwrap());
+                    match self.verbose {
+                        true => println!("{} is {}", url.url, result.unwrap()),
+                        false => {
+                            print!("{}", if result.is_ok() {"."} else {"x"});
+                            io::stdout().flush();
+                        }
+                    }
                 }
 
-                println!("--- Sleeping for {} milliseconds ---", self.sleep);
+                match self.verbose {
+                    true => println!("--- Sleeping for {} milliseconds ---", self.sleep),
+                    false => { 
+                        print!(", ");
+                        io::stdout().flush();
+                    }
+                }
+
                 thread::sleep_ms(self.sleep);
             }
         }
