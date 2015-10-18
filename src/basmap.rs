@@ -10,31 +10,32 @@ use std::thread;
 
 use hyper::Client;
 use hyper::header::Connection;
+use hyper::status::StatusCode;
 
 pub struct SitemapUrl {
     url: String,
-    code: Result<i32, i32>,
+    code: Result<StatusCode, StatusCode>,
 }
 
 impl SitemapUrl {
     pub fn new(url: String) -> SitemapUrl {
         SitemapUrl{
             url: url,
-            code: Ok(200),
+            code: Ok(StatusCode::Ok),
         }
     }
 }
 
 pub struct Basmap {
-    pub concurrent: i32,
-    pub sleep: i32,
+    pub concurrent: usize,
+    pub sleep: u32,
     pub redirects: bool,
     pub verbose: bool,
     urls: Vec<SitemapUrl>,
 }
 
 impl Basmap {
-    pub fn new(concurrent: i32, sleep: i32, verbose: bool, redirects: bool) -> Basmap {
+    pub fn new(concurrent: usize, sleep: u32, verbose: bool, redirects: bool) -> Basmap {
         Basmap{
             concurrent: concurrent,
             sleep: sleep,
@@ -74,8 +75,8 @@ impl Basmap {
             let client = Arc::new(Client::new());
             let mut urls = &mut self.urls[..];
 
-            for chunk in urls.chunks_mut(self.concurrent as usize) {
-                let threads: Vec<std::thread::JoinHandle<Result<i32, i32>>> = chunk.iter().map(|url| {
+            for chunk in urls.chunks_mut(self.concurrent) {
+                let threads: Vec<std::thread::JoinHandle<Result<StatusCode, StatusCode>>> = chunk.iter().map(|url| {
                     let sync_client = client.clone();
                     let full_url = String::from(&url.url[..]);
 
@@ -85,8 +86,16 @@ impl Basmap {
                             .send();
 
                         match resp {
-                            Ok(r) => Ok(204),
-                            _ => Err(0),
+                            Ok(r) => {
+                                let status = r.status;
+
+                                if status.is_success() {
+                                    Ok(status)
+                                } else {
+                                    Err(status)
+                                }
+                            }
+                            _ => Err(StatusCode::Unregistered(0)),
                         }
                     })
                 }).collect();
@@ -100,7 +109,8 @@ impl Basmap {
                     println!("{} is {}", url.url, url.code.unwrap());
                 }
 
-                println!("---");
+                println!("--- Sleeping for {} milliseconds ---", self.sleep);
+                thread::sleep_ms(self.sleep);
             }
         }
     }

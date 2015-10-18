@@ -45,12 +45,12 @@ fn main() {
     let url = matches.free[0].clone();
     let verbose = matches.opt_present("v");
     let redirects = matches.opt_present("r");
-    let concurrent: i32 = match matches.opt_str("c") {
-        Some(c) => { c.parse::<i32>().unwrap() }
+    let concurrent: usize = match matches.opt_str("c") {
+        Some(c) => { c.parse::<usize>().unwrap() }
         None => { 3 }
     };
-    let sleep: i32 = match matches.opt_str("s") {
-        Some(m) => { m.parse::<i32>().unwrap() }
+    let sleep: u32 = match matches.opt_str("s") {
+        Some(m) => { m.parse::<u32>().unwrap() }
         None => { 1000 }
     };
 
