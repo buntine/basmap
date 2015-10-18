@@ -88,15 +88,13 @@ impl Basmap {
 
                     thread::spawn(move || { 
                         let resp = sync_client.head(&full_url[..])
-                            .header(Connection::keep_alive())
+                            .header(Connection::close())
                             .send();
 
                         match resp {
                             Ok(r) => {
-                                let status = r.status;
-                                let success = status.is_success() || (redirects && status.is_redirection());
-
-                                if success {Ok(status)} else {Err(status)}
+                                let success = r.status.is_success() || (redirects && r.status.is_redirection());
+                                if success {Ok(r.status)} else {Err(r.status)}
                             }
                             _ => Err(StatusCode::Unregistered(0)),
                         }
