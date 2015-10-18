@@ -84,7 +84,7 @@ impl Basmap {
             for chunk in urls.chunks_mut(self.concurrent) {
                 let threads: Vec<std::thread::JoinHandle<Result<StatusCode, StatusCode>>> = chunk.iter().map(|url| {
                     let sync_client = client.clone();
-                    let full_url = String::from(&url.url[..]);
+                    let full_url = url.url.to_string();
 
                     thread::spawn(move || { 
                         let resp = sync_client.head(&full_url[..])
@@ -128,6 +128,7 @@ impl Basmap {
         // For quiet, just print total number in each StatusCode.
         // Give percentages of total on each.
 
+        println!("\n\n");
         println!("TOTAL SUCCESS: {}", success.len());
         println!("TOTAL FAIL: {}", fail.len());
     }
