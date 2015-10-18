@@ -22,8 +22,8 @@ fn build_options() -> Options {
     options.optopt("c", "", "Amount of concurrent HTTP requests (default 3)", "NUMBER");
     options.optopt("s", "", "Milliseconds to sleep between requests (default 1000)", "NUMBER");
     options.optflag("h", "help", "Print this help menu");
-    options.optflag("r", "redirects", "Consider HTTP redirects (30x) successfuly");
-    options.optflag("v", "verbose", "Print progress verbosely");
+    options.optflag("r", "redirects", "Consider HTTP redirects (30x) successful");
+    options.optflag("v", "verbose", "Print verbose summary");
 
     options
 }
