@@ -1,10 +1,15 @@
 extern crate xml;
+extern crate hyper;
 
 use xml::reader::{EventReader, XmlEvent};
 
 use std::io::Read;
 
+use std::sync::Arc;
 use std::thread;
+
+use hyper::Client;
+use hyper::header::Connection;
 
 pub struct SitemapUrl {
     url: String,
@@ -66,13 +71,23 @@ impl Basmap {
         if self.urls.is_empty() {
             println!("No URLs to check!");
         } else {
+            let client = Arc::new(Client::new());
             let mut urls = &mut self.urls[..];
-            let chunks = urls.chunks_mut(self.concurrent as usize);
 
-            for chunk in chunks {
+            for chunk in urls.chunks_mut(self.concurrent as usize) {
                 let threads: Vec<std::thread::JoinHandle<Result<i32, i32>>> = chunk.iter().map(|url| {
+                    let sync_client = client.clone();
+                    let full_url = String::from(&url.url[..]);
+
                     thread::spawn(move || { 
-                        Ok(204)
+                        let resp = sync_client.head(&full_url[..])
+                            .header(Connection::keep_alive())
+                            .send();
+
+                        match resp {
+                            Ok(r) => Ok(204),
+                            _ => Err(0),
+                        }
                     })
                 }).collect();
 
@@ -84,11 +99,14 @@ impl Basmap {
 
                     println!("{} is {}", url.url, url.code.unwrap());
                 }
+
+                println!("---");
             }
         }
     }
 
     pub fn summarize(&self) {
+        // Try fold using a tuple.
         let (success, fail): (Vec<_>, Vec<_>) = self.urls.iter().partition(|&u| u.code.is_ok());
 
         println!("TOTAL SUCCESS: {}", success.len());
