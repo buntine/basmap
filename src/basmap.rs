@@ -94,12 +94,9 @@ impl Basmap {
                         match resp {
                             Ok(r) => {
                                 let status = r.status;
+                                let success = status.is_success() || (redirects && status.is_redirection());
 
-                                if status.is_success() || (redirects && status.is_redirection()) {
-                                    Ok(status)
-                                } else {
-                                    Err(status)
-                                }
+                                if success {Ok(status)} else {Err(status)}
                             }
                             _ => Err(StatusCode::Unregistered(0)),
                         }
