@@ -2,7 +2,7 @@ extern crate xml;
 extern crate hyper;
 extern crate ansi_term;
 
-use xml::reader::{EventReader, XmlEvent};
+use std::collections::HashMap;
 
 use std::io::Read;
 use std::io::Write;
@@ -11,11 +11,14 @@ use std::io::stdout;
 use std::sync::Arc;
 use std::thread;
 
+use xml::reader::{EventReader, XmlEvent};
+
 use hyper::Client;
 use hyper::header::Connection;
 use hyper::status::StatusCode;
 
 use ansi_term::Colour::{Red, Green};
+use ansi_term::Style;
 
 pub struct SitemapUrl {
     url: String,
@@ -119,18 +122,45 @@ impl Basmap {
         }
     }
 
-    pub fn summarize(&self) {
-        // Try fold using a tuple.
-        let (success, fail): (Vec<_>, Vec<_>) = self.urls.iter().partition(|&u| u.code.is_ok());
+    fn status_code_hash<'a>(&'a self, urls: &Vec<&'a SitemapUrl>) -> HashMap<StatusCode, Vec<&'a str>> {
+        let mut codes = HashMap::new();
 
+        if urls.len() > 0 {
+        codes.insert(StatusCode::Ok, Vec::new());
+
+        if let Some(sc) = codes.get_mut(&StatusCode::Ok) {
+            sc.push(&urls[0].url[..]);
+        }
+        }
+
+        codes
+    }
+
+    pub fn summarize(&self) {
+        let (total_success, total_fail): (Vec<_>, Vec<_>) = self.urls.iter().partition(|&u| u.code.is_ok());
+        let success_hash = self.status_code_hash(&total_success);
+        let fail_hash = self.status_code_hash(&total_fail);
+
+        println!("\n");
+
+        for (code, urls) in &success_hash {
+            let title = Green.underline().bold().paint(&code.to_string()[..]));
+
+            if self.verbose {
+                println!("{}", title);
+
+                for u in urls {
+                    println!("  - {}", u);
+                }
+            } else {
+                println!("{}: {}", title, urls.len());
+            }
+        }
+
+        println!("\n");
         // Build iterators over each unique StatusCode.
         // For verbose, print full URLs for each StatusCode.
         // For quiet, just print total number in each StatusCode.
         // Give percentages of total on each.
-
-        println!("\n");
-
-        println!("{}", Green.paint(&format!("Successful: {}", success.len())[..]));
-        println!("{}", Red.paint(&format!("Failed: {}", fail.len())[..]));
     }
 }
