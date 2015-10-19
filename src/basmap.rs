@@ -144,7 +144,8 @@ impl Basmap {
         println!("\n");
 
         for (code, urls) in &success_hash {
-            let title = Green.underline().bold().paint(&code.to_string()[..]));
+            let code_str = code.to_string();
+            let title = Green.underline().bold().paint(&code_str[..]);
 
             if self.verbose {
                 println!("{}", title);
