@@ -169,6 +169,6 @@ impl Basmap {
         println!("\n");
 
         self.summarize_results(&success_hash, &self.verbose, Green);
-        self.summarize_results(&fail_hash, &false, Red);
+        self.summarize_results(&fail_hash, &true, Red);
     }
 }
