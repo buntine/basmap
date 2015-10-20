@@ -127,7 +127,10 @@ impl Basmap {
         let mut codes = HashMap::new();
 
         for u in urls {
-            let status = u.code.unwrap();
+            let status = match u.code {
+                Ok(s) => s,
+                Err(s) => s,
+            };
 
             codes.entry(status).or_insert(Vec::new());
 
@@ -141,8 +144,6 @@ impl Basmap {
 
     fn summarize_results(&self, results: &HashMap<StatusCode, Vec<&str>>, verbose: &bool, colour: Colour) {
         if !results.is_empty() {
-            println!("\n");
-
             for (code, urls) in results {
                 let code_str = code.to_string();
                 let title = colour.underline().bold().paint(&code_str[..]);
@@ -164,6 +165,8 @@ impl Basmap {
         let (total_success, total_fail): (Vec<_>, Vec<_>) = self.urls.iter().partition(|&u| u.code.is_ok());
         let success_hash = self.status_code_hash(&total_success);
         let fail_hash = self.status_code_hash(&total_fail);
+
+        println!("\n");
 
         self.summarize_results(&success_hash, &self.verbose, Green);
         self.summarize_results(&fail_hash, &false, Red);
