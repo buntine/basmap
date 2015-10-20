@@ -47,7 +47,7 @@ fn main() {
     let redirects = matches.opt_present("r");
     let concurrent: usize = match matches.opt_str("c") {
         Some(c) => { c.parse::<usize>().unwrap() }
-        None => { 3 }
+        None => { 5 }
     };
     let sleep: u32 = match matches.opt_str("s") {
         Some(m) => { m.parse::<u32>().unwrap() }

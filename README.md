@@ -1,9 +1,7 @@
 # BASMAP
 Buntine's Awesome Sitemap Audit Program.
 
-BASMAP is a command line utility for auditing the Sitemap.xml at a given website.
-
-**A work in progress**
+BASMAP is a command line utility for auditing the [Sitemap](https://en.wikipedia.org/wiki/Sitemaps) at a given website.
 
 ## Usage
 
@@ -11,7 +9,7 @@ BASMAP is a command line utility for auditing the Sitemap.xml at a given website
 basmap URL [options]
 
 Options:
-    -c NUMBER           Amount of concurrent HTTP requests (default 3)
+    -c NUMBER           Amount of concurrent HTTP requests (default 5)
     -s NUMBER           Milliseconds to sleep between requests (default 1000)
     -h, --help          Print this help menu
     -r, --redirects     Consider HTTP redirects (30x) successful
@@ -21,5 +19,5 @@ Options:
 # Example
 
 ```
-$ basmap http://news.com.au/sitemap.xml -c 10 -s 2000 -r -v
+$ basmap http://news.com.au/sitemap.xml -c 20 -s 2000 -r
 ```
