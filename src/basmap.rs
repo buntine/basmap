@@ -17,6 +17,7 @@ use hyper::Client;
 use hyper::header::Connection;
 use hyper::status::StatusCode;
 
+use ansi_term::Colour;
 use ansi_term::Colour::{Red, Green};
 //use ansi_term::Style;
 
@@ -136,44 +137,35 @@ impl Basmap {
         codes
     }
 
+    fn summarize_results(&self, results: &HashMap<StatusCode, Vec<&str>>, verbose: &bool, colour: Colour) {
+        if !results.is_empty() {
+            println!("\n");
+
+            for (code, urls) in results {
+                let code_str = code.to_string();
+                let title = colour.underline().bold().paint(&code_str[..]);
+
+                if *verbose {
+                    println!("{}", title);
+
+                    for u in urls {
+                        println!("  - {}", u);
+                    }
+                    print!("\n")
+                } else {
+                    println!("{}: {}", title, urls.len());
+                }
+            }
+        }
+    }
+
     pub fn summarize(&self) {
         let (total_success, total_fail): (Vec<_>, Vec<_>) = self.urls.iter().partition(|&u| u.code.is_ok());
         let success_hash = self.status_code_hash(&total_success);
         let fail_hash = self.status_code_hash(&total_fail);
 
-        if !success_hash.is_empty() {
-        println!("\n");
-        for (code, urls) in &success_hash {
-            let code_str = code.to_string();
-            let title = Green.underline().bold().paint(&code_str[..]);
-
-            if self.verbose {
-                println!("{}", title);
-
-                for u in urls {
-                    println!("  - {}", u);
-                }
-                print!("\n")
-            } else {
-                println!("{}: {}", title, urls.len());
-            }
-        }
-        }
-
-        if !fail_hash.is_empty() {
-        println!("\n");
-        for (code, urls) in &fail_hash {
-            let code_str = code.to_string();
-            let title = Red.underline().bold().paint(&code_str[..]);
-
-            println!("{}", title);
-
-            for u in urls {
-                println!("  - {}", u);
-            }
-            print!("\n")
-        }
-        }
+        self.summarize_results(&success_hash, &self.verbose, Green);
+        self.summarize_results(&fail_hash, &false, Red);
 
         print!("\n");
     }
