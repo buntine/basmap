@@ -126,12 +126,14 @@ impl Basmap {
     fn status_code_hash<'a>(&'a self, urls: &Vec<&'a SitemapUrl>) -> HashMap<StatusCode, Vec<&'a str>> {
         let mut codes = HashMap::new();
 
-        if urls.len() > 0 {
-        codes.insert(StatusCode::Ok, Vec::new());
+        for u in urls {
+            let status = u.code.unwrap();
 
-        if let Some(sc) = codes.get_mut(&StatusCode::Ok) {
-            sc.push(&urls[0].url[..]);
-        }
+            codes.entry(status).or_insert(Vec::new());
+
+            if let Some(sc) = codes.get_mut(&status) {
+                sc.push(&u.url[..]);
+            }
         }
 
         codes
@@ -147,13 +149,12 @@ impl Basmap {
 
                 if *verbose {
                     println!("{}", title);
-
                     for u in urls {
                         println!("  - {}", u);
                     }
                     print!("\n")
                 } else {
-                    println!("{}: {}", title, urls.len());
+                    println!("{}: {}\n", title, urls.len());
                 }
             }
         }
@@ -166,7 +167,5 @@ impl Basmap {
 
         self.summarize_results(&success_hash, &self.verbose, Green);
         self.summarize_results(&fail_hash, &false, Red);
-
-        print!("\n");
     }
 }
