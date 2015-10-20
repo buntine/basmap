@@ -18,7 +18,7 @@ use hyper::header::Connection;
 use hyper::status::StatusCode;
 
 use ansi_term::Colour::{Red, Green};
-use ansi_term::Style;
+//use ansi_term::Style;
 
 pub struct SitemapUrl {
     url: String,
@@ -141,8 +141,8 @@ impl Basmap {
         let success_hash = self.status_code_hash(&total_success);
         let fail_hash = self.status_code_hash(&total_fail);
 
+        if !success_hash.is_empty() {
         println!("\n");
-
         for (code, urls) in &success_hash {
             let code_str = code.to_string();
             let title = Green.underline().bold().paint(&code_str[..]);
@@ -153,15 +153,28 @@ impl Basmap {
                 for u in urls {
                     println!("  - {}", u);
                 }
+                print!("\n")
             } else {
                 println!("{}: {}", title, urls.len());
             }
         }
+        }
 
+        if !fail_hash.is_empty() {
         println!("\n");
-        // Build iterators over each unique StatusCode.
-        // For verbose, print full URLs for each StatusCode.
-        // For quiet, just print total number in each StatusCode.
-        // Give percentages of total on each.
+        for (code, urls) in &fail_hash {
+            let code_str = code.to_string();
+            let title = Red.underline().bold().paint(&code_str[..]);
+
+            println!("{}", title);
+
+            for u in urls {
+                println!("  - {}", u);
+            }
+            print!("\n")
+        }
+        }
+
+        print!("\n");
     }
 }
