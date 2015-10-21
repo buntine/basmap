@@ -148,14 +148,13 @@ impl Basmap {
                 let code_str = code.to_string();
                 let title = colour.underline().bold().paint(&code_str[..]);
 
+                println!("{}: {}\n", title, urls.len());
+
                 if *verbose {
-                    println!("{}", title);
                     for u in urls {
                         println!("  - {}", u);
                     }
                     print!("\n")
-                } else {
-                    println!("{}: {}\n", title, urls.len());
                 }
             }
         }
