@@ -11,9 +11,10 @@ basmap URL [options]
 Options:
     -c NUMBER           Amount of concurrent HTTP requests (default 5)
     -s NUMBER           Milliseconds to sleep between requests (default 1000)
-    -h, --help          Print this help menu
+    -z, --gzip          Decode gzip response
     -r, --redirects     Consider HTTP redirects (30x) successful
     -v, --verbose       Print progress verbosely
+    -h, --help          Print this help menu
 ```
 
 # Example

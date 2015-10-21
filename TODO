@@ -1,0 +1,11 @@
+- Set Accept HTTP request field
+- Set Cache-related HTTP request fields
+*- Add in Gzip support
+- Add in total time it took to run
+- Export results as JSON
+- Percentage success
+- Total running time
+- Option to ignore certain patterns
+- Option to ignore certain patterns after N repeats
+- Option to only use urls that match certain patterns
+- Option to take random N from sitemap
