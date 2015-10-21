@@ -1,12 +1,16 @@
 extern crate hyper;
 extern crate getopts;
 extern crate basmap;
+extern crate flate2;
 
 use getopts::Options;
 use std::env;
 
 use hyper::Client;
 use hyper::header::Connection;
+
+use std::io::prelude::*;
+use flate2::read::GzDecoder;
 
 use basmap::*;
 
@@ -65,15 +69,20 @@ fn main() {
         
     let mut basmap = Basmap::new(concurrent, sleep, verbose, redirects);
 
-    let parsed = if gzip {
-        basmap.parse(resp)
-    } else {
-        basmap.parse(resp)
-    };
+    {
+        let parsed = if gzip {
+            let bytes: Vec<u8> = resp.bytes().map(|b| b.unwrap()).collect();
+            let decoded = match GzDecoder::new(&bytes[..]) {
+                Ok(d) => d,
+                Err(_) => panic!("Unable to decode Gzipped response"),
+            };
 
-    match parsed {
-        Ok(n) => { println!("Fetched {} URLs from {}\n", n, url) }
-        Err(e) => { panic!(e.to_string()) }
+            basmap.parse(decoded)
+        } else {
+            basmap.parse(resp)
+        };
+
+        println!("Fetched {} URLs from {}\n", parsed, url);
     }
 
     basmap.run();

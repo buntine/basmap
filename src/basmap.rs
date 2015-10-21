@@ -54,7 +54,7 @@ impl Basmap {
         }
     }
 
-    pub fn parse<T: Read>(&mut self, reader: T) -> Result<usize, &str> {
+    pub fn parse<T: Read>(&mut self, reader: T) -> usize {
         let parser = EventReader::new(reader);
         let mut in_loc = false;
 
@@ -74,7 +74,7 @@ impl Basmap {
             }
         }
 
-        Ok(self.urls.len())
+        self.urls.len()
     }
 
     pub fn run(&mut self) {
