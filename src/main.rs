@@ -23,6 +23,7 @@ fn build_options() -> Options {
     options.optopt("s", "", "Milliseconds to sleep between requests (default 1000)", "NUMBER");
     options.optflag("h", "help", "Print this help menu");
     options.optflag("r", "redirects", "Consider HTTP redirects (30x) successful");
+    options.optflag("z", "gzip", "Decode gzip response");
     options.optflag("v", "verbose", "Print verbose summary");
 
     options
@@ -45,6 +46,7 @@ fn main() {
     let url = matches.free[0].clone();
     let verbose = matches.opt_present("v");
     let redirects = matches.opt_present("r");
+    let gzip = matches.opt_present("z");
     let concurrent: usize = match matches.opt_str("c") {
         Some(c) => { c.parse::<usize>().unwrap() }
         None => { 5 }
@@ -61,12 +63,15 @@ fn main() {
         .ok()
         .expect("Invalid sitemap URL");
         
-    let mut basmap = Basmap::new(concurrent,
-                                 sleep,
-                                 verbose,
-                                 redirects);
+    let mut basmap = Basmap::new(concurrent, sleep, verbose, redirects);
 
-    match basmap.parse(resp) {
+    let parsed = if gzip {
+        basmap.parse(resp)
+    } else {
+        basmap.parse(resp)
+    };
+
+    match parsed {
         Ok(n) => { println!("Fetched {} URLs from {}\n", n, url) }
         Err(e) => { panic!(e.to_string()) }
     }
