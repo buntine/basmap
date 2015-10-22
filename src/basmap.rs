@@ -162,10 +162,11 @@ impl Basmap {
 
     pub fn summarize(&self) {
         let (total_success, total_fail): (Vec<_>, Vec<_>) = self.urls.iter().partition(|&u| u.code.is_ok());
+        let success_rate = (total_success.len() as f32 / self.urls.len() as f32) * 100.0;
         let success_hash = self.status_code_hash(&total_success);
         let fail_hash = self.status_code_hash(&total_fail);
 
-        println!("\n");
+        println!("\n\nSuccess rate: {}%\n", format!("{:.*}", 1, success_rate));
 
         self.summarize_results(&success_hash, &self.verbose, Green);
         self.summarize_results(&fail_hash, &true, Red);
