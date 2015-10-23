@@ -4,7 +4,7 @@
 - Option to ignore certain patterns after N repeats
 - Option to only use urls that match certain patterns
 - Option to take random N from sitemap
-- Option to ping google, yahoo, bing
+- Option to ping google and bing if success rate > N
 ?- Total running time (just use time?)
 ?- Set Cache-related HTTP request fields
 *- Add in Gzip support
