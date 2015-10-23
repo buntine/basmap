@@ -29,8 +29,8 @@ fn build_options() -> Options {
     options.optflag("r", "redirects", "Consider HTTP redirects (30x) successful");
     options.optflag("z", "gzip", "Decode gzip response");
     options.optflag("v", "verbose", "Print verbose summary");
-    options.optflag("", "google", "Ping Sitemap to Google.com");
-    options.optflag("", "bing", "Ping Sitemap to Bing.com");
+    options.optflag("", "google", "Ping Sitemap to Google");
+    options.optflag("", "bing", "Ping Sitemap to Bing");
     options.optopt("", "min-ping", "Minimum success rate % required to ping search engines (default 100)", "NUMBER");
 
     options
@@ -99,4 +99,14 @@ fn main() {
 
     basmap.run();
     let success_rate = basmap.summarize();
+
+    if success_rate >= min_ping {
+        if ping_google {
+            println!("Successfully pinged Google");
+        }
+
+        if ping_bing {
+            println!("Successfully pinged Bing");
+        }
+    }
 }

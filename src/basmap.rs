@@ -168,17 +168,17 @@ impl Basmap {
         let success_hash = self.status_code_hash(&total_success);
         let fail_hash = self.status_code_hash(&total_fail);
 
-        let success_rate: f32 = if self.urls.is_empty() {
-            0.0
-        } else { 
-            let sr = (total_success.len() as f32 / self.urls.len() as f32) * 100.0;
-            println!("\n\nSuccess rate: {}%\n", format!("{:.*}", 1, sr));
-            sr
-        };
+        println!("\n");
 
         self.summarize_results(&success_hash, &self.verbose, Green);
         self.summarize_results(&fail_hash, &true, Red);
 
-        return success_rate;
+        if self.urls.is_empty() {
+            0.0
+        } else { 
+            let sr = (total_success.len() as f32 / self.urls.len() as f32) * 100.0;
+            println!("Success rate: {}%\n", format!("{:.*}", 1, sr));
+            sr
+        }
     }
 }
