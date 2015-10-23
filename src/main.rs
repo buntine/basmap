@@ -67,7 +67,7 @@ fn main() {
     let min_ping: i8 = match matches.opt_str("min-ping") {
         Some(m) => { 
             let min = m.parse::<i8>().ok().expect("Invalid minimum ping success rate");
-            if min >= 1 && min <= 100 { min } else { 100 }
+            if min >= 0 && min <= 100 { min } else { 100 }
         }
         None => { 100 }
     };
