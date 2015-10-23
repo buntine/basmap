@@ -28,6 +28,9 @@ Options:
     -r, --redirects     Consider HTTP redirects (30x) successful
     -v, --verbose       Print progress verbosely
     -h, --help          Print this help menu
+        --google        Ping Sitemap to Google
+        --bing          Ping Sitemap to Bing
+        --min-ping      Minimum success rate % required to ping search engines (default 100)
 ```
 
 # Example
