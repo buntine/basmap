@@ -54,13 +54,22 @@ fn main() {
     let verbose = matches.opt_present("v");
     let redirects = matches.opt_present("r");
     let gzip = matches.opt_present("z");
+    let ping_google = matches.opt_present("google");
+    let ping_bing = matches.opt_present("bing");
     let concurrent: usize = match matches.opt_str("c") {
-        Some(c) => { c.parse::<usize>().unwrap() }
+        Some(c) => { c.parse::<usize>().ok().expect("Invalid concurrency value") }
         None => { 5 }
     };
     let sleep: u32 = match matches.opt_str("s") {
-        Some(m) => { m.parse::<u32>().unwrap() }
+        Some(m) => { m.parse::<u32>().ok().expect("Invalid sleep value") }
         None => { 1000 }
+    };
+    let min_ping: i8 = match matches.opt_str("min-ping") {
+        Some(m) => { 
+            let min = m.parse::<i8>().ok().expect("Invalid minimum ping success rate");
+            if min >= 1 && min <= 100 { min } else { 100 }
+        }
+        None => { 100 }
     };
 
     let client = Client::new();

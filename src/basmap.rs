@@ -143,19 +143,21 @@ impl Basmap {
     }
 
     fn summarize_results(&self, results: &HashMap<StatusCode, Vec<&str>>, verbose: &bool, colour: Colour) {
-        if !results.is_empty() {
-            for (code, urls) in results {
-                let code_str = code.to_string();
-                let title = colour.underline().bold().paint(&code_str[..]);
+        if results.is_empty() {
+            return;
+        }
 
-                println!("{}: {}\n", title, urls.len());
+        for (code, urls) in results {
+            let code_str = code.to_string();
+            let title = colour.underline().bold().paint(&code_str[..]);
 
-                if *verbose {
-                    for u in urls {
-                        println!("  - {}", u);
-                    }
-                    print!("\n")
+            println!("{}: {}\n", title, urls.len());
+
+            if *verbose {
+                for u in urls {
+                    println!("  - {}", u);
                 }
+                print!("\n")
             }
         }
     }
