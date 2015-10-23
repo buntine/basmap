@@ -1,7 +1,5 @@
 # BASMAP
-**B**untine's **A**wesome **S**ite**M**ap **A**udit **P**rogram.
-
-BASMAP is a command line utility for auditing the [Sitemap](https://en.wikipedia.org/wiki/Sitemaps) at a given website.
+**B**untine's **A**wesome **S**ite**M**ap **A**udit **P**rogram is a command line utility for auditing the [Sitemap](https://en.wikipedia.org/wiki/Sitemaps) at a given website.
 
 BASMAP will fetch all URLs from the given sitemap and report on any HTTP errors it encounters. It's a useful tool for providing a very high-level integration test suite and may be useful as a post-deploy hook to ensure that a change in one webpage has not affected other webpages unintentionally.
 
@@ -9,7 +7,7 @@ BASMAP will fetch all URLs from the given sitemap and report on any HTTP errors 
 
 If you want a standalone binary:
 
-  * [download the latest version](https://github.com/buntine/basmap/tree/master/dist)
+  * [Download the latest version](https://github.com/buntine/basmap/tree/master/dist)
   * Setup a symlink to somewhere on your path ```$ ln -s /full/path/to/basmap /usr/local/bin/basmap```
 
 Or to build from source, clone this repo and:
