@@ -24,13 +24,13 @@ basmap URL [options]
 Options:
     -c NUMBER           Amount of concurrent HTTP requests (chunk size) (default 5)
     -s NUMBER           Milliseconds to sleep between chunks (default 1000)
-    -z, --gzip          Decode gzip response
+    -z, --gzip          Decode gzipped response
     -r, --redirects     Consider HTTP redirects (30x) successful
-    -v, --verbose       Print progress verbosely
-    -h, --help          Print this help menu
+    -v, --verbose       Print verbose summary
         --google        Ping Sitemap to Google
         --bing          Ping Sitemap to Bing
         --min-ping      Minimum success rate % required to ping search engines (default 100)
+    -h, --help          Print this help menu
 ```
 
 # Example

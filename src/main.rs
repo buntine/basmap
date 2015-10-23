@@ -27,7 +27,7 @@ fn build_options() -> Options {
     options.optopt("s", "", "Milliseconds to sleep between requests (default 1000)", "NUMBER");
     options.optflag("h", "help", "Print this help menu");
     options.optflag("r", "redirects", "Consider HTTP redirects (30x) successful");
-    options.optflag("z", "gzip", "Decode gzip response");
+    options.optflag("z", "gzip", "Decode gzipped response");
     options.optflag("v", "verbose", "Print verbose summary");
     options.optflag("", "google", "Ping Sitemap to Google");
     options.optflag("", "bing", "Ping Sitemap to Bing");
