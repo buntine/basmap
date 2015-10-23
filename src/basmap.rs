@@ -80,46 +80,47 @@ impl Basmap {
     pub fn run(&mut self) {
         if self.urls.is_empty() {
             println!("No URLs to check!");
-        } else {
-            let client = Arc::new(Client::new());
-            let mut urls = &mut self.urls[..];
-            let redirects = self.redirects;
+            return;
+        }
 
-            for chunk in urls.chunks_mut(self.concurrent) {
-                let threads: Vec<std::thread::JoinHandle<Result<StatusCode, StatusCode>>> = chunk.iter().map(|url| {
-                    let sync_client = client.clone();
-                    let full_url = url.url.to_string();
+        let client = Arc::new(Client::new());
+        let mut urls = &mut self.urls[..];
+        let redirects = self.redirects;
 
-                    thread::spawn(move || { 
-                        let resp = sync_client.head(&full_url[..])
-                            .header(Connection::close())
-                            .send();
+        for chunk in urls.chunks_mut(self.concurrent) {
+            let threads: Vec<std::thread::JoinHandle<Result<StatusCode, StatusCode>>> = chunk.iter().map(|url| {
+                let sync_client = client.clone();
+                let full_url = url.url.to_string();
 
-                        match resp {
-                            Ok(r) => {
-                                let success = r.status.is_success() || (redirects && r.status.is_redirection());
-                                if success {Ok(r.status)} else {Err(r.status)}
-                            }
-                            _ => Err(StatusCode::Unregistered(0)),
+                thread::spawn(move || { 
+                    let resp = sync_client.head(&full_url[..])
+                        .header(Connection::close())
+                        .send();
+
+                    match resp {
+                        Ok(r) => {
+                            let success = r.status.is_success() || (redirects && r.status.is_redirection());
+                            if success {Ok(r.status)} else {Err(r.status)}
                         }
-                    })
-                }).collect();
+                        _ => Err(StatusCode::Unregistered(0)),
+                    }
+                })
+            }).collect();
 
-                let mut it = chunk.iter_mut().zip(threads);
+            let mut it = chunk.iter_mut().zip(threads);
 
-                while let Some((url, thread)) = it.next() {
-                    let result = thread.join().unwrap();
-                    url.code = result;
+            while let Some((url, thread)) = it.next() {
+                let result = thread.join().unwrap();
+                url.code = result;
 
-                    print!("{}", if result.is_ok() {Green.paint(".")} else {Red.paint("x")});
-                    stdout().flush().ok();
-                }
-
-                print!(", ");
+                print!("{}", if result.is_ok() {Green.paint(".")} else {Red.paint("x")});
                 stdout().flush().ok();
-
-                thread::sleep_ms(self.sleep);
             }
+
+            print!(", ");
+            stdout().flush().ok();
+
+            thread::sleep_ms(self.sleep);
         }
     }
 
@@ -162,17 +163,22 @@ impl Basmap {
         }
     }
 
-    pub fn summarize(&self) {
+    pub fn summarize(&self) -> f32 {
         let (total_success, total_fail): (Vec<_>, Vec<_>) = self.urls.iter().partition(|&u| u.code.is_ok());
         let success_hash = self.status_code_hash(&total_success);
         let fail_hash = self.status_code_hash(&total_fail);
 
-        if !self.urls.is_empty() {
-            let success_rate = (total_success.len() as f32 / self.urls.len() as f32) * 100.0;
-            println!("\n\nSuccess rate: {}%\n", format!("{:.*}", 1, success_rate));
-        }
+        let success_rate: f32 = if self.urls.is_empty() {
+            0.0
+        } else { 
+            let sr = (total_success.len() as f32 / self.urls.len() as f32) * 100.0;
+            println!("\n\nSuccess rate: {}%\n", format!("{:.*}", 1, sr));
+            sr
+        };
 
         self.summarize_results(&success_hash, &self.verbose, Green);
         self.summarize_results(&fail_hash, &true, Red);
+
+        return success_rate;
     }
 }

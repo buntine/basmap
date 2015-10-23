@@ -64,12 +64,12 @@ fn main() {
         Some(m) => { m.parse::<u32>().ok().expect("Invalid sleep value") }
         None => { 1000 }
     };
-    let min_ping: i8 = match matches.opt_str("min-ping") {
+    let min_ping: f32 = match matches.opt_str("min-ping") {
         Some(m) => { 
-            let min = m.parse::<i8>().ok().expect("Invalid minimum ping success rate");
-            if min >= 0 && min <= 100 { min } else { 100 }
+            let min = m.parse::<f32>().ok().expect("Invalid minimum ping success rate");
+            if min >= 0.0 && min <= 100.0 { min } else { 100.0 }
         }
-        None => { 100 }
+        None => { 100.0 }
     };
 
     let client = Client::new();
@@ -98,5 +98,5 @@ fn main() {
     }
 
     basmap.run();
-    basmap.summarize();
+    let success_rate = basmap.summarize();
 }
