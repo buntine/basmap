@@ -111,10 +111,7 @@ impl Basmap {
         let mut codes = HashMap::new();
 
         for u in urls {
-            let status = match u.code {
-                Ok(s) => s,
-                Err(s) => s,
-            };
+            let status = u.status(); 
 
             codes.entry(status).or_insert(Vec::new());
 
@@ -148,10 +145,10 @@ impl Basmap {
             return 0.0;
         }
 
-        let (total_success, total_fail): (Vec<_>, Vec<_>) = self.urls.iter().partition(|&u| u.code.is_ok());
-        let success_hash = self.status_code_hash(&total_success);
-        let fail_hash = self.status_code_hash(&total_fail);
-        let success_rate = (total_success.len() as f32 / self.urls.len() as f32) * 100.0;
+        let (all_success, all_fail): (Vec<_>, Vec<_>) = self.urls.iter().partition(|&u| u.is_success());
+        let success_hash = self.status_code_hash(&all_success);
+        let fail_hash = self.status_code_hash(&all_fail);
+        let success_rate = (all_success.len() as f32 / self.urls.len() as f32) * 100.0;
 
         println!("\n");
 

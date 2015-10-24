@@ -12,6 +12,15 @@ impl SitemapUrl {
             code: Ok(StatusCode::Ok),
         }
     }
+
+    pub fn is_success(&self) -> bool {
+        self.code.is_ok()
+    }
+
+    pub fn status(&self) -> StatusCode {
+        match self.code {
+            Ok(s) => s,
+            Err(s) => s,
+        }
+    }
 }
-
-
