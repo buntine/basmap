@@ -1,7 +1,3 @@
-extern crate xml;
-extern crate hyper;
-extern crate ansi_term;
-
 use std::collections::HashMap;
 
 use std::io::Read;
@@ -19,21 +15,8 @@ use hyper::status::StatusCode;
 
 use ansi_term::Colour;
 use ansi_term::Colour::{Red, Green};
-//use ansi_term::Style;
 
-pub struct SitemapUrl {
-    url: String,
-    code: Result<StatusCode, StatusCode>,
-}
-
-impl SitemapUrl {
-    pub fn new(url: String) -> SitemapUrl {
-        SitemapUrl{
-            url: url,
-            code: Ok(StatusCode::Ok),
-        }
-    }
-}
+use ::basmap::sitemap_url::SitemapUrl;
 
 pub struct Basmap {
     pub concurrent: usize,
@@ -88,7 +71,7 @@ impl Basmap {
         let redirects = self.redirects;
 
         for chunk in urls.chunks_mut(self.concurrent) {
-            let threads: Vec<std::thread::JoinHandle<Result<StatusCode, StatusCode>>> = chunk.iter().map(|url| {
+            let threads: Vec<thread::JoinHandle<Result<StatusCode, StatusCode>>> = chunk.iter().map(|url| {
                 let sync_client = client.clone();
                 let full_url = url.url.to_string();
 

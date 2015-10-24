@@ -1,7 +1,7 @@
 extern crate hyper;
 extern crate getopts;
-extern crate basmap;
 extern crate flate2;
+extern crate basmap;
 
 use getopts::Options;
 use std::env;
@@ -12,7 +12,7 @@ use hyper::header::Connection;
 use std::io::prelude::*;
 use flate2::read::GzDecoder;
 
-use basmap::*;
+use basmap::basmap::basmap::Basmap;
 
 fn print_usage(program: &str, opts: Options) {
     let brief = format!("Usage: {} URL [options]", program);
