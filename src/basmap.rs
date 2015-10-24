@@ -16,7 +16,7 @@ use hyper::status::StatusCode;
 use ansi_term::Colour;
 use ansi_term::Colour::{Red, Green};
 
-use ::basmap::sitemap_url::SitemapUrl;
+use sitemap_url::SitemapUrl;
 
 pub struct Basmap {
     pub concurrent: usize,

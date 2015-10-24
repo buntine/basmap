@@ -3,10 +3,6 @@ name = "basmap"
 version = "0.6.0"
 authors = ["Andrew Buntine Of Doom <info@bunts.io>"]
 
-#[lib]
-#name = "basmap"
-#path = "src/basmap.rs"
-
 [dependencies]
 getopts = "0.2"
 hyper = "0.6"
