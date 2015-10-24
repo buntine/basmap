@@ -144,41 +144,39 @@ impl Basmap {
     }
 
     fn summarize_results(&self, results: &HashMap<StatusCode, Vec<&str>>, verbose: &bool, colour: Colour) {
-        if results.is_empty() {
-            return;
-        }
-
         for (code, urls) in results {
             let code_str = code.to_string();
             let title = colour.underline().bold().paint(&code_str[..]);
 
-            println!("{}: {}\n", title, urls.len());
+            println!("{}: {}", title, urls.len());
 
             if *verbose {
                 for u in urls {
                     println!("  - {}", u);
                 }
-                print!("\n")
             }
+
+            print!("\n")
         }
     }
 
     pub fn summarize(&self) -> f32 {
+        if self.urls.is_empty() {
+            return 0.0;
+        }
+
         let (total_success, total_fail): (Vec<_>, Vec<_>) = self.urls.iter().partition(|&u| u.code.is_ok());
         let success_hash = self.status_code_hash(&total_success);
         let fail_hash = self.status_code_hash(&total_fail);
+        let success_rate = (total_success.len() as f32 / self.urls.len() as f32) * 100.0;
 
         println!("\n");
 
         self.summarize_results(&success_hash, &self.verbose, Green);
         self.summarize_results(&fail_hash, &true, Red);
 
-        if self.urls.is_empty() {
-            0.0
-        } else { 
-            let sr = (total_success.len() as f32 / self.urls.len() as f32) * 100.0;
-            println!("Success rate: {}%\n", format!("{:.*}", 1, sr));
-            sr
-        }
+        println!("Success rate: {}%", format!("{:.*}", 1, success_rate));
+
+        success_rate
     }
 }
