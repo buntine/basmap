@@ -3,6 +3,8 @@
 
 BASMAP will fetch all URLs from the given sitemap and report on any HTTP errors it encounters. It's a useful tool for providing a very high-level integration test suite and may be useful as a post-deploy hook to ensure that a change in one webpage has not affected other webpages unintentionally.
 
+BASMAP is written in the Rust programming language.
+
 ## Installation
 
 If you want a standalone binary:
