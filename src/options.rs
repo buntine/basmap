@@ -64,12 +64,8 @@ impl OptionManager {
         self.matches.opt_present("z")
     }
 
-    pub fn ping_google(&self) -> bool {
-        self.matches.opt_present("google")
-    }
-
-    pub fn ping_bing(&self) -> bool {
-        self.matches.opt_present("bing")
+    pub fn ping(&self, engine: &str) -> bool {
+        self.matches.opt_present(engine)
     }
 
     pub fn concurrent(&self) -> usize {

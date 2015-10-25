@@ -66,12 +66,12 @@ fn main() {
     let success_rate = basmap.summarize();
 
     if success_rate >= matches.min_ping() {
-        if matches.ping_google() {
+        if matches.ping("google") {
             send_ping(&client, "Google",
                       format!("http://www.google.com/webmasters/sitemaps/ping?sitemap={}", url));
         }
 
-        if matches.ping_bing() {
+        if matches.ping("bing") {
             send_ping(&client, "Bing",
                       format!("http://www.bing.com/webmaster/ping.aspx?siteMap={}", url));
         }
