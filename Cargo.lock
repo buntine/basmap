@@ -1,6 +1,6 @@
 [root]
 name = "basmap"
-version = "0.6.1"
+version = "0.6.2"
 dependencies = [
  "ansi_term 0.6.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "flate2 0.2.9 (registry+https://github.com/rust-lang/crates.io-index)",
