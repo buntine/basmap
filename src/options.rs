@@ -71,4 +71,28 @@ impl OptionManager {
     pub fn ping_bing(&self) -> bool {
         self.matches.opt_present("bing")
     }
+
+    pub fn concurrent(&self) -> usize {
+        match self.matches.opt_str("c") {
+            Some(c) => { c.parse::<usize>().ok().expect("Invalid concurrency value") }
+            None => 5,
+        }
+    }
+
+    pub fn sleep(&self) -> u32 {
+        match self.matches.opt_str("s") {
+            Some(m) => { m.parse::<u32>().ok().expect("Invalid sleep value") }
+            None => 1000,
+        }
+    }
+
+    pub fn min_ping(&self) -> f32 {
+        match self.matches.opt_str("min-ping") {
+            Some(m) => { 
+                let min = m.parse::<f32>().ok().expect("Invalid minimum ping success rate");
+                if min >= 0.0 && min <= 100.0 { min } else { 100.0 }
+            }
+            None => 100.0,
+        }
+    }
 }

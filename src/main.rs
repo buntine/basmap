@@ -39,22 +39,6 @@ fn main() {
     }
 
     let url = matches.url();
-    let concurrent: usize = match matches.opt_str("c") {
-        Some(c) => { c.parse::<usize>().ok().expect("Invalid concurrency value") }
-        None => { 5 }
-    };
-    let sleep: u32 = match matches.opt_str("s") {
-        Some(m) => { m.parse::<u32>().ok().expect("Invalid sleep value") }
-        None => { 1000 }
-    };
-    let min_ping: f32 = match matches.opt_str("min-ping") {
-        Some(m) => { 
-            let min = m.parse::<f32>().ok().expect("Invalid minimum ping success rate");
-            if min >= 0.0 && min <= 100.0 { min } else { 100.0 }
-        }
-        None => { 100.0 }
-    };
-
     let client = Client::new();
     let resp = client.get(&url[..])
         .header(Connection::close())
@@ -62,7 +46,8 @@ fn main() {
         .ok()
         .expect("Invalid sitemap URL");
         
-    let mut basmap = Basmap::new(concurrent, sleep, matches.verbose(), matches.redirects());
+    let mut basmap = Basmap::new(matches.concurrent(), matches.sleep(),
+                                 matches.verbose(), matches.redirects());
 
     {
         let parsed = if matches.gzip() {
@@ -80,7 +65,7 @@ fn main() {
     basmap.run();
     let success_rate = basmap.summarize();
 
-    if success_rate >= min_ping {
+    if success_rate >= matches.min_ping() {
         if matches.ping_google() {
             send_ping(&client, "Google",
                       format!("http://www.google.com/webmasters/sitemaps/ping?sitemap={}", url));
