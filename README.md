@@ -36,7 +36,7 @@ Options:
     -h, --help          Print this help menu
 ```
 
-# Examples
+## Examples
 
 
 20 concurrents with a 2 second sleep.
