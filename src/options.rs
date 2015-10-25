@@ -51,4 +51,24 @@ impl OptionManager {
     pub fn url(&self) -> String {
         self.matches.free[0].clone()
     }
+
+    pub fn verbose(&self) -> bool {
+        self.matches.opt_present("v")
+    }
+
+    pub fn redirects(&self) -> bool {
+        self.matches.opt_present("r")
+    }
+
+    pub fn gzip(&self) -> bool {
+        self.matches.opt_present("z")
+    }
+
+    pub fn ping_google(&self) -> bool {
+        self.matches.opt_present("google")
+    }
+
+    pub fn ping_bing(&self) -> bool {
+        self.matches.opt_present("bing")
+    }
 }

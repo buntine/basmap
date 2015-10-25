@@ -39,11 +39,6 @@ fn main() {
     }
 
     let url = matches.url();
-    let verbose = matches.opt_present("v");
-    let redirects = matches.opt_present("r");
-    let gzip = matches.opt_present("z");
-    let ping_google = matches.opt_present("google");
-    let ping_bing = matches.opt_present("bing");
     let concurrent: usize = match matches.opt_str("c") {
         Some(c) => { c.parse::<usize>().ok().expect("Invalid concurrency value") }
         None => { 5 }
@@ -67,10 +62,10 @@ fn main() {
         .ok()
         .expect("Invalid sitemap URL");
         
-    let mut basmap = Basmap::new(concurrent, sleep, verbose, redirects);
+    let mut basmap = Basmap::new(concurrent, sleep, matches.verbose(), matches.redirects());
 
     {
-        let parsed = if gzip {
+        let parsed = if matches.gzip() {
             let bytes: Vec<u8> = resp.bytes().map(|b| b.unwrap()).collect();
             let decoded = GzDecoder::new(&bytes[..]).ok().expect("Unable to decode Gzipped response");
 
@@ -86,12 +81,12 @@ fn main() {
     let success_rate = basmap.summarize();
 
     if success_rate >= min_ping {
-        if ping_google {
+        if matches.ping_google() {
             send_ping(&client, "Google",
                       format!("http://www.google.com/webmasters/sitemaps/ping?sitemap={}", url));
         }
 
-        if ping_bing {
+        if matches.ping_bing() {
             send_ping(&client, "Bing",
                       format!("http://www.bing.com/webmaster/ping.aspx?siteMap={}", url));
         }
