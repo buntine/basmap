@@ -4,7 +4,6 @@
 - Option to ignore certain patterns after N repeats
 - Option to only use urls that match certain patterns
 - Option to take random N from sitemap
-- Option to ping google and bing if success rate > N
 - Remove ./dist and use github releases
 - Work out how to build for osx, etc.
 - Mel to do Logo
@@ -13,3 +12,4 @@
 ?- Set Cache-related HTTP request fields
 *- Add in Gzip support
 *- Percentage success
+*- Option to ping google and bing if success rate > N

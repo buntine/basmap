@@ -36,6 +36,13 @@ fn build_options() -> Options {
     options
 }
 
+fn send_ping(client: &Client, engine: &str, url: String) {
+    match client.get(&url[..]).send() {
+        Ok(_) => println!("\nSuccessfully pinged {}", engine),
+        Err(_) => println!("\nCould not ping {}", engine),
+    };
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let program = args[0].clone();
@@ -84,10 +91,7 @@ fn main() {
     {
         let parsed = if gzip {
             let bytes: Vec<u8> = resp.bytes().map(|b| b.unwrap()).collect();
-            let decoded = match GzDecoder::new(&bytes[..]) {
-                Ok(d) => d,
-                Err(_) => panic!("Unable to decode Gzipped response"),
-            };
+            let decoded = GzDecoder::new(&bytes[..]).ok().expect("Unable to decode Gzipped response");
 
             basmap.parse(decoded)
         } else {
@@ -102,11 +106,13 @@ fn main() {
 
     if success_rate >= min_ping {
         if ping_google {
-            println!("Successfully pinged Google");
+            send_ping(&client, "Google",
+                      format!("http://www.google.com/webmasters/sitemaps/ping?sitemap={}", url));
         }
 
         if ping_bing {
-            println!("Successfully pinged Bing");
+            send_ping(&client, "Bing",
+                      format!("http://www.bing.com/webmaster/ping.aspx?siteMap={}", url));
         }
     }
 }
