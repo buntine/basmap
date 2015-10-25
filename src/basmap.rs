@@ -155,7 +155,7 @@ impl Basmap {
         self.summarize_results(&success_hash, &self.verbose, Green);
         self.summarize_results(&fail_hash, &true, Red);
 
-        println!("Success rate: {}%", format!("{:.*}", 1, success_rate));
+        println!("Success rate: {}%\n", format!("{:.*}", 1, success_rate));
 
         success_rate
     }

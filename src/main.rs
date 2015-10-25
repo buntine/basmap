@@ -9,6 +9,7 @@ use std::env;
 use hyper::Client;
 use hyper::header::Connection;
 
+use std::io::stdout;
 use std::io::prelude::*;
 use flate2::read::GzDecoder;
 
@@ -37,9 +38,12 @@ fn build_options() -> Options {
 }
 
 fn send_ping(client: &Client, engine: &str, url: String) {
+    print!("Pinging {}... ", engine);
+    stdout().flush().ok();
+
     match client.get(&url[..]).send() {
-        Ok(_) => println!("\nSuccessfully pinged {}", engine),
-        Err(_) => println!("\nCould not ping {}", engine),
+        Ok(_) => println!("Success"),
+        Err(_) => println!("Failed"),
     };
 }
 
