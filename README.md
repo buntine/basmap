@@ -7,7 +7,8 @@ BASMAP will fetch all URLs from the given sitemap and report on any HTTP errors 
 
 If you want a standalone binary:
 
-  * [Download the latest version](https://github.com/buntine/basmap/tree/master/dist)
+  * [Download the standalone binary from the latest release](https://github.com/buntine/basmap/releases)
+  * Ensure it's executable ```$ chmod 755 /full/path/to/basmap```
   * Setup a symlink to somewhere on your path ```$ ln -s /full/path/to/basmap /usr/local/bin/basmap```
 
 Or to build from source, clone this repo and:
