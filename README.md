@@ -36,8 +36,20 @@ Options:
     -h, --help          Print this help menu
 ```
 
-# Example
+# Examples
 
+
+20 concurrents with a 2 second sleep.
 ```
-$ basmap http://news.com.au/sitemap.xml -c 20 -s 2000 -r
+$ basmap http://www.news.com.au/sitemap.xml -c 20 -s 2000 -r
+```
+
+60 concurrents with a 1 second sleep. Ping search engines on 95%+ success rate
+```
+$ basmap http://www.news.com.au/sitemap.xml -c 60 --min-ping 95 --google --bing
+```
+
+Decode gzipped sitemap
+```
+$ basmap http://hardhatdigital.com.au/sitemap.xml.gz -z
 ```
