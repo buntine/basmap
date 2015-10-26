@@ -19,6 +19,14 @@ Or to build from source, clone this repo and:
 $ cargo build
 ```
 
+## Installation (OS X)
+
+The easiest way to install on OS X is using [Homebrew](http://brew.sh/).
+
+```
+$ brew install -v https://raw.githubusercontent.com/buntine/basmap/master/Formula/basmap.rb
+```
+
 ## Usage
 
 ```
