@@ -2,9 +2,9 @@ require 'formula'
 
 class Basmap < Formula
   homepage 'https://github.com/buntine/basmap'
-  url 'https://github.com/buntine/basmap/archive/v0.6.1-alpha.tar.gz'
-  sha256 '9e30e97c08cdba0a2e6de182583ac5aa918815c94f5d962321615aef194319f7'
-  version '0.6.1-alpha'
+  url 'https://github.com/buntine/basmap/archive/v0.6.2.tar.gz'
+  sha256 'e58b0a6b8a9b937ab5b170eba24168e42889febeb088040f0b9ee774fecf7b51'
+  version '0.6.2'
 
   head 'https://github.com/buntine/basmap.git'
 
