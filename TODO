@@ -6,10 +6,10 @@
 - Option to take random N from sitemap
 - Work out how to build for osx, etc.
 - Mel to do Logo
-- Move options stuff from main into new module (./src/options.rs)
 ?- Total running time (just use time?)
 ?- Set Cache-related HTTP request fields
 *- Add in Gzip support
 *- Percentage success
 *- Option to ping google and bing if success rate > N
 *- Remove ./dist and use github releases
+*- Move options stuff from main into new module (./src/options.rs)
