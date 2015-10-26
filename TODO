@@ -4,7 +4,6 @@
 - Option to ignore certain patterns after N repeats
 - Option to only use urls that match certain patterns
 - Option to take random N from sitemap
-- Work out how to build for osx, etc.
 - Mel to do Logo
 ?- Total running time (just use time?)
 ?- Set Cache-related HTTP request fields
