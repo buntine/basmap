@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
+    <url>
+        <loc>http://www.swagger.com.au/about/</loc>
+        <lastmod>2015-06-26T16:30:39+10:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>http://www.swagger.com.au/capabilities/</loc>
+        <lastmod>2015-06-26T16:30:39+10:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>http://www.swagger.com.au/case-studies/</loc>
+        <lastmod>2015-06-26T16:30:39+10:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>http://www.swagger.com.au/swag/</loc>
+        <lastmod>2015-06-26T16:30:39+10:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>http://www.swagger.com.au/dank/</loc>
+        <lastmod>2015-06-26T16:30:39+10:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+</urlset>
