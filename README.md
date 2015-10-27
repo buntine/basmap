@@ -24,7 +24,8 @@ $ cargo build
 The easiest way to install on OS X is using [Homebrew](http://brew.sh/).
 
 ```
-$ brew install -v https://raw.githubusercontent.com/buntine/basmap/master/Formula/basmap.rb
+$ brew tap buntine/basmap https://github.com/buntine/basmap.git
+$ brew install -v basmap
 ```
 
 ## Usage
