@@ -1,8 +1,13 @@
 extern crate basmap;
+extern crate hyper;
 
 use basmap::basmap::Basmap;
+use basmap::sitemap_url::SitemapUrl;
+
 use std::fs::File;
 use std::io::BufReader;
+
+use hyper::status::StatusCode;
 
 #[test]
 fn new_basmap() {
@@ -32,4 +37,44 @@ fn invalid_parse() {
     let count = basmap.parse(reader);
 
     assert_eq!(count, 0);
+}
+
+#[test]
+fn new_sitemap_url() {
+    let su = SitemapUrl::new("http://www.swagger.cool/home/".to_string());
+
+    assert_eq!(su.url, "http://www.swagger.cool/home/".to_string());
+    assert_eq!(su.code, Ok(StatusCode::Ok));
+}
+
+#[test]
+fn sitemap_url_is_success() {
+    let su = SitemapUrl::new("http://www.swagger.cool/home/".to_string());
+
+    assert!(su.is_success());
+}
+
+#[test]
+fn sitemap_url_is_not_success() {
+    let mut su = SitemapUrl::new("http://www.swagger.cool/home/".to_string());
+
+    su.code = Err(StatusCode::NotFound);
+
+    assert_eq!(su.is_success(), false);
+}
+
+#[test]
+fn sitemap_url_status_ok () {
+    let su = SitemapUrl::new("http://www.swagger.cool/home/".to_string());
+
+    assert_eq!(su.status(), StatusCode::Ok);
+}
+
+#[test]
+fn sitemap_url_status_err () {
+    let mut su = SitemapUrl::new("http://www.swagger.cool/home/".to_string());
+
+    su.code = Err(StatusCode::NotFound);
+
+    assert_eq!(su.status(), StatusCode::NotFound);
 }
