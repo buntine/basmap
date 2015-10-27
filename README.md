@@ -5,19 +5,17 @@ BASMAP will fetch all URLs from the given sitemap and report on any HTTP errors 
 
 BASMAP is written in the Rust programming language.
 
-## Installation
+## Installation (source)
 
-If you want a standalone binary:
+```
+$ cargo build --release
+```
+
+## Installation (Linux)
 
   * [Download the standalone binary from the latest release](https://github.com/buntine/basmap/releases)
   * Ensure it's executable ```$ chmod 755 /full/path/to/basmap```
   * Setup a symlink to somewhere on your path ```$ ln -s /full/path/to/basmap /usr/local/bin/basmap```
-
-Or to build from source, clone this repo and:
-
-```
-$ cargo build
-```
 
 ## Installation (OS X)
 
