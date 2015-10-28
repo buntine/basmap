@@ -51,7 +51,7 @@ fn main() {
 
     {
         let parsed = if matches.gzip() {
-            let bytes: Vec<u8> = resp.bytes().map(|b| b.unwrap()).collect();
+            let bytes: Vec<u8> = resp.bytes().map(|b| b.ok().expect("IO error")).collect();
             let decoded = GzDecoder::new(&bytes[..]).ok().expect("Unable to decode Gzipped response");
 
             basmap.parse(decoded)
